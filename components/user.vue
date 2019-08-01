@@ -18,7 +18,7 @@
             <b-list-group-item v-for="f in user.friend" :key="f.id">
               <b-link :to="'userhome/'+f.userid">
                 <img
-                  :src="'http://localhost:8989/user/avatars/'+f.avatar"
+                  :src="'http://106.15.183.147:8989/user/avatars/'+f.avatar"
                   height="40px"
                   width="40px"
                   style="object-fit: cover;"

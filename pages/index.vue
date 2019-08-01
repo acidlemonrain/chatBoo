@@ -1,22 +1,14 @@
 <template>
   <div class="container">
-    <b-container class="bv-example-row">
-      <b-row>
-        <b-col>1 of 3</b-col>
-        <b-col>2 of 3</b-col>
-        <b-col>3 of 3</b-col>
-      </b-row>
-    </b-container>
-    <b-container>
-      <b-row class="column">
-        <b-list-group>
-          <b-list-group-item v-for="blog in blogs" :key="blog.id">
-            {{blog.author}} :
-            {{blog.content}}
-          </b-list-group-item>
-        </b-list-group>
-      </b-row>
-    </b-container>
+    <div v-for="user in users" :key="user.id">
+      <img
+        :src="'http://localhost:8989/user/avatars/'+user.avatar"
+        width="40px"
+        height="40px"
+        style="object-fit: cover;"
+      />
+      {{user.nickname}}
+    </div>
   </div>
 </template>
 
@@ -30,13 +22,13 @@ export default {
   //数据
   data: () => {
     return {
-      blogs: []
+      users: []
     };
   },
   //数据初始
   created() {
-    this.$http.get("blog").then(res => {
-      this.blogs = res.data;
+    this.$http.get("friend").then(res => {
+      this.users = res.data;
     });
   }
 };

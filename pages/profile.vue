@@ -20,15 +20,15 @@
           <b-form-row>
             <b-form>
               <b-form-group label-cols label="nickname">
-                <b-input v-model="user.nickname"></b-input>
+                <b-input v-model="form.nickname"></b-input>
               </b-form-group>
               <b-form-group label-cols label="des">
-                <b-input v-model="user.des"></b-input>
+                <b-input v-model="form.des"></b-input>
               </b-form-group>
               <b-form-group label-cols label="sex">
-                <b-input v-model="user.sex"></b-input>
+                <b-form-radio-group v-model="form.sex" :options="options" name="radio-inline"></b-form-radio-group>
               </b-form-group>
-              <b-button>confirm</b-button>
+              <b-button @click="basicinfo">confirm</b-button>
             </b-form>
           </b-form-row>
         </b-card>
@@ -41,7 +41,9 @@
 export default {
   data: () => {
     return {
-      file: ""
+      file: "",
+      form: {},
+      options: [{ text: "男", value: "Male" }, { text: "女", value: "Female" }]
     };
   },
   computed: {
@@ -49,7 +51,26 @@ export default {
       return this.$store.state.user;
     }
   },
+  mounted() {
+    this.form = this.user;
+  },
   methods: {
+    //修改名字 性别
+    basicinfo() {
+      this.$http
+        .post("user/prof", { ...{ userid: this.user.userid }, ...this.form })
+        .then(res => {
+          this.$bvToast.toast(`修改成功`, {
+            solid: true
+          });
+          let user = { ...this.user };
+          user.nickname = form.nickname;
+          user.sex = this.form.sex;
+          user.des = this.form.des;
+          this.$store.commit("auth", { ...user });
+        });
+    },
+    //修改头像
     submitFile() {
       /*
                 Initialize the form data
@@ -71,8 +92,6 @@ export default {
         .then(res => {
           let user = { ...this.user };
           user.avatar = res.data;
-          console.log(res.data);
-
           this.$store.commit("auth", { ...user });
         })
         .catch(function(e) {

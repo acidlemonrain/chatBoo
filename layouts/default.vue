@@ -3,20 +3,12 @@
     <div>
       <b-navbar type="dark" variant="dark" fixed="top" height="80px">
         <b-navbar-nav>
-          <b-nav-item :to="'/chat'">Home</b-nav-item>
-          <b-nav-item :to="'/blog'">blog</b-nav-item>
-          <b-nav-item :to="'/home'">myhome</b-nav-item>
-          <!-- Navbar dropdowns -->
-          <b-nav-item-dropdown text="Lang" right>
-            <b-dropdown-item href="#">EN</b-dropdown-item>
-            <b-dropdown-item href="#">ES</b-dropdown-item>
-            <b-dropdown-item href="#">RU</b-dropdown-item>
-            <b-dropdown-item href="#">FA</b-dropdown-item>
-          </b-nav-item-dropdown>
+          <b-nav-item :to="'/chat'">聊天室</b-nav-item>
+          <b-nav-item :to="'/blog'">动态</b-nav-item>
 
-          <b-nav-item-dropdown text="User" right>
-            <b-dropdown-item :to="'/login'">Account</b-dropdown-item>
-            <b-dropdown-item href="#">Settings</b-dropdown-item>
+          <b-nav-item-dropdown text="用户" right>
+            <b-dropdown-item :to="'/login'">账户</b-dropdown-item>
+            <b-dropdown-item :to="'/home'" v-if="(typeof user.userid )  ">我的主页</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">

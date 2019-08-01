@@ -4,7 +4,6 @@
       <b-form @submit="submit">
         <b-form-group>
           <label for="textarea-small">Small:</label>
-
           <b-form-textarea
             id="textarea-small"
             size="sm"
@@ -12,10 +11,11 @@
             v-model="form.content"
           ></b-form-textarea>
         </b-form-group>
-        <b-button type="submit">发表</b-button>
-        <b-button @click="is=!is">取消</b-button>
+        <b-button class="float-right" @click="is=!is">取消</b-button>
+        <b-button class="float-right mx-3" type="submit">发表</b-button>
       </b-form>
     </b-card>
+
     <b-button @click="is=!is" v-if="!is">创建动态</b-button>
 
     <br />
@@ -55,13 +55,13 @@
       <div v-for="com in blog.comments" :key="com.id">{{com.user.nickname}} : {{com.content}}</div>
 
       <b-form-group>
-        <b-form-textarea size="sm" placeholder="Small textarea" v-model="form.comment"></b-form-textarea>
+        <b-form-textarea size="sm" v-model="blog.comment"></b-form-textarea>
       </b-form-group>
-      <b-button @click="comment(blog.id)">评论</b-button>
-      <b-button @click="vote(blog.id)">
+      <b-button @click="vote(blog.id)" class="float-right">
         点赞
         <b-badge variant="light">{{blog.vote}}</b-badge>
       </b-button>
+      <b-button @click="comment(blog)" class="float-right mx-3">评论</b-button>
     </b-card>
     <b-button @click="loadblogs">加载更多</b-button>
   </b-container>
@@ -93,17 +93,17 @@ export default {
   },
   methods: {
     //评论功能
-    comment(id) {
+    comment(blog) {
       this.$http
         .post("comment", {
           user: this.user.userid || 1,
-          blog: id,
-          content: this.form.comment
+          blog: blog.id,
+          content: blog.comment
         })
         .then(res => {
           this.blogs
             .find(x => {
-              return x.id === id;
+              return x.id === blog.id;
             })
             .comments.push({
               user: {

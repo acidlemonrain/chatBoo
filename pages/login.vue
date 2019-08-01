@@ -2,8 +2,8 @@
   <b-container>
     <b-row class="wrap">
       <b-col sm="12" md="6">
-        <b-button @click="login=false">login</b-button>
-        <b-button @click="login=true">register</b-button>
+        <b-button @click="login=false">登录</b-button>
+        <b-button @click="login=true">注册</b-button>
       </b-col>
       <b-col sm="12" md="6">
         <b-form-row>

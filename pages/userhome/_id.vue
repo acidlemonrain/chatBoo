@@ -2,7 +2,7 @@
   <b-container>
     <b-row>
       <b-col md="5" sm="12">
-        <b-card>
+        <b-card :class="{pink:info.sex=='Female'}">
           <figure>
             <img
               :src="'http://106.15.183.147:8989/user/avatars/'+info.avatar"
@@ -10,16 +10,25 @@
               style="object-fit: cover;"
             />
           </figure>
-          <b-list-group>
-            <b-list-group-item class="d-flex justify-content-between align-items-center">
-              昵称：
-              <div>{{info.nickname}}</div>
-            </b-list-group-item>
-            <b-list-group-item class="d-flex justify-content-between align-items-center">
-              个人简介：
-              <div>{{info.des}}</div>
-            </b-list-group-item>
-          </b-list-group>
+
+          <div class="d-flex justify-content-between align-items-center">
+            昵称：
+            <div>{{info.nickname}}</div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            个人简介：
+            <div>{{info.des}}</div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            性别：
+            <div>{{info.sex}}</div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            好友数量
+            <div>{{info.friend | leng}}</div>
+          </div>
 
           <hr />
           <div>
@@ -34,6 +43,7 @@
         </b-card>
       </b-col>
       <b-col md="7" sm="12">
+        <hr />
         <h5>他的动态</h5>
         <div v-for="blog in info.blogs" :key="blog.id">
           <b-card class="content mb-3">
@@ -61,6 +71,13 @@ export default {
     },
     local: x => {
       return new Date(x).toLocaleString();
+    },
+    leng: value => {
+      if (value) {
+        return value.length;
+      } else {
+        return "error";
+      }
     }
   },
   methods: {
@@ -72,7 +89,10 @@ export default {
           content: this.content
         })
         .then(res => {
-          alert(res.data);
+          this.$bvToast.toast(` `, {
+            title: "已发送",
+            solid: true
+          });
         });
     }
   },
@@ -95,10 +115,14 @@ export default {
   mounted() {
     this.$http.get("user/userhome/" + this.id).then(res => {
       this.info = res.data;
+      console.log(this.info);
     });
   }
 };
 </script>
 
 <style>
+.pink {
+  background-color: pink;
+}
 </style>

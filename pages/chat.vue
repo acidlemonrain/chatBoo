@@ -1,56 +1,87 @@
 <template>
   <b-container>
-    <div style="display:none">{{ui}}</div>
-    <b-row>
-      <b-col md="9" v-if="chatWith!=''">
-        to : {{target.nickname}}
-        <div v-for="(i,inx) in target.msgs" :key="inx">
-          <div v-bind:class="{ right: user.userid == i.chatWith  }">
-            <figure>
-              <img
-                :src="'http://106.15.183.147:8989/user/avatars/'+i.avatar"
-                width="40px"
-                height="40px"
-                style="object-fit: cover;"
-              />
-              <span v-bind:class="{ right: user.userid == i.chatWith  }">{{i.author}}:</span>
-            </figure>
-            <div>{{i.content}}</div>
-          </div>
-        </div>
-        <b-form-group>
-          <b-input v-model="msg"></b-input>
-          <b-button @click="send">send</b-button>
-        </b-form-group>
-      </b-col>
-      <b-col md="3">
-        <h5>我的好友</h5>
+    <b-tabs content-class="mt-3">
+      <b-tab title="好友广场">
+        <plaza></plaza>
+      </b-tab>
+      <b-tab title="我的好友">
+        <b-container>
+          <div class>
+            <div v-if="chatWith==''">
+              <ul>
+                <li v-for="f in user.friend" :key="f.id">
+                  <div
+                    class
+                    v-if="online.includes(f.userid)"
+                    style="color:green;cursor:pointer"
+                    @click="chatWith=f.userid"
+                  >
+                    {{f.nickname}}
+                    <b-badge variant="red">{{f.unread}}</b-badge>
+                  </div>
+                  <div class v-if="!online.includes(f.userid)" style="color:red">
+                    {{f.nickname}}
+                    <b-badge variant="red">{{f.unread}}</b-badge>
+                  </div>
+                </li>
+              </ul>
+            </div>
 
-        <ul>
-          <li v-for="f in user.friend" :key="f.id">
-            <div
-              class
-              v-if="online.includes(f.userid)"
-              style="color:green;cursor:pointer"
-              @click="chatWith=f.userid"
-            >
-              {{f.nickname}}
-              <b-badge variant="red">{{f.unread}}</b-badge>
+            <div v-if="chatWith!=''" style="position:relative ;width:100%">
+              <div>
+                <img
+                  :src="'http://106.15.183.147:8989/user/avatars/'+target.avatar"
+                  width="40px"
+                  height="40px"
+                  style="object-fit: cover;border-radius:50%"
+                />
+                {{target.nickname}}
+                <button
+                  type="button"
+                  class="close"
+                  aria-label="Close"
+                  @click="chatWith=''"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="msgContent" id="msg">
+                <div v-for="(i,inx) in target.msgs" :key="inx">
+                  <div v-bind:class="{ right: user.userid != i.chatWith  }" class="my-3">
+                    <div>
+                      <img
+                        :src="'http://106.15.183.147:8989/user/avatars/'+i.avatar"
+                        width="40px"
+                        height="40px"
+                        style="object-fit: cover;border-radius:50%"
+                      />
+                      <span v-bind:class="{ right: user.userid == i.chatWith  }">{{i.author}}:</span>
+                    </div>
+                    <div class="ml-4 d-inline-block px-3 mt-2">{{ i.content}}</div>
+                  </div>
+                </div>
+              </div>
+              <b-form-group>
+                <b-input v-model="msg"></b-input>
+                <b-button @click="send" class="float-right">send</b-button>
+              </b-form-group>
             </div>
-            <div class v-if="!online.includes(f.userid)" style="color:red">
-              {{f.nickname}}
-              <b-badge variant="red">{{f.unread}}</b-badge>
-            </div>
-          </li>
-        </ul>
-      </b-col>
-    </b-row>
+          </div>
+        </b-container>
+      </b-tab>
+    </b-tabs>
+
+    <div style="display:none">{{ui}}</div>
   </b-container>
 </template>
 
 <script>
 import io from "socket.io-client";
+import plaza from "~/components/plaza.vue";
 export default {
+  components: {
+    plaza
+  },
   data: () => {
     return {
       ui: 0,
@@ -64,10 +95,12 @@ export default {
   },
   watch: {
     chatWith(to) {
-      this.target = this.friends.find(e => {
-        return e.userid == to;
-      });
-      this.target.unread = "";
+      if (to != "") {
+        this.target = this.friends.find(e => {
+          return e.userid == to;
+        });
+        this.target.unread = "";
+      }
     }
   },
   methods: {
@@ -87,6 +120,10 @@ export default {
           });
           this.target.msgs.push(msg);
           this.msg = "";
+          var element = document.getElementById("msg");
+          setTimeout(() => {
+            element.scrollTop = element.scrollHeight;
+          }, 20);
         }
       });
     }
@@ -115,6 +152,12 @@ export default {
       let target = this.friends.find(x => {
         return x.userid == res.id;
       });
+      if (!!target.userid && target.userid === res.id) {
+        var element = document.getElementById("msg");
+        setTimeout(() => {
+          element.scrollTop = element.scrollHeight;
+        }, 20);
+      }
       if (!target.userid || target.userid != this.target.userid) {
         if (target.unread && target.unread != "") {
           target.unread++;
@@ -133,9 +176,14 @@ export default {
 };
 </script>
 
-<style>
+ 
+<style  >
 .right {
   text-align: right;
   color: lightcoral;
+}
+.msgContent {
+  height: 60vh;
+  overflow-y: scroll;
 }
 </style>
