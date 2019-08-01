@@ -84,7 +84,13 @@ export default {
         this.$http
           .post("user", this.form)
           .then(res => {
-            alert(JSON.stringify(res.data));
+           
+            if (res.data == false) {
+              alert("未知错误");
+            }
+            if (res.data == true) {
+              alert("注册成功");
+            }
           })
           .catch(e => {
             alert(JSON.stringify(e));

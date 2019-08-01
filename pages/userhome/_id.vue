@@ -2,7 +2,7 @@
   <b-container>
     <b-row>
       <b-col md="5" sm="12">
-        <b-card :class="{pink:info.sex=='Female'}">
+        <b-card :class="{pink:info.sex=='Female',blue:info.sex=='Male'}">
           <figure>
             <img
               :src="'http://106.15.183.147:8989/user/avatars/'+info.avatar"
@@ -123,6 +123,9 @@ export default {
 
 <style>
 .pink {
-  background-color: pink;
+  background-color: rgba(255, 182, 193, 0.384);
+}
+.blue {
+  background-color: rgba(173, 216, 230, 0.397);
 }
 </style>

@@ -22,9 +22,9 @@
     <hr />
     <br />
 
-    <b-card class="mb-3" v-for="blog in blogs" :key="blog.id" border-variant="primary">
-      <b-nav-item :to="'userhome/'+blog.author.userid">
-        <figure>
+    <div class="mb-5" v-for="blog in blogs" :key="blog.id">
+      <figure>
+        <b-link :to="'userhome/'+blog.author.userid">
           <img
             :src="'http://106.15.183.147:8989/user/avatars/'+blog.author.avatar"
             alt
@@ -32,9 +32,10 @@
             height="60px"
             style="border-radius:50%;object-fit:cover"
           />
-          {{blog.author.nickname}}
-        </figure>
-      </b-nav-item>
+        </b-link>
+        {{blog.author.nickname}}
+      </figure>
+
       <div class="content">
         <div v-if="blog.content.length<=250">{{blog.content }}</div>
 
@@ -52,18 +53,22 @@
       <div class="text-right">{{ blog.gen | local}}</div>
       <hr />
 
-      <div v-for="com in blog.comments" :key="com.id">{{com.user.nickname}} : {{com.content}}</div>
+      <b-button block @click="blog.iscom = (!blog.iscom)" variant="outline-primary">&#8628;</b-button>
 
-      <b-form-group>
-        <b-form-textarea size="sm" v-model="blog.comment"></b-form-textarea>
-      </b-form-group>
-      <b-button @click="vote(blog.id)" class="float-right">
-        点赞
-        <b-badge variant="light">{{blog.vote}}</b-badge>
-      </b-button>
-      <b-button @click="comment(blog)" class="float-right mx-3">评论</b-button>
-    </b-card>
-    <b-button @click="loadblogs">加载更多</b-button>
+      <div v-if="blog.iscom">
+        <div v-for="com in blog.comments" :key="com.id">{{com.user.nickname}} : {{com.content}}</div>
+        <b-form-group>
+          <b-form-textarea size="sm" v-model="blog.comment"></b-form-textarea>
+        </b-form-group>
+
+        <b-button @click="vote(blog.id)" class="float-right" pill>
+          点赞
+          <b-badge variant="light">{{blog.vote}}</b-badge>
+        </b-button>
+        <b-button @click="comment(blog)" class="float-right mx-3" pill>评论</b-button>
+      </div>
+    </div>
+    <b-button @click="loadblogs" pill>加载更多</b-button>
   </b-container>
 </template>
 
@@ -165,6 +170,7 @@ export default {
       this.$http.get("blog/" + this.page).then(res => {
         res.data.forEach(element => {
           element.tag = false;
+          element.iscom = false;
           element.comments = [];
         });
         this.page++;

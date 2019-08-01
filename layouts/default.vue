@@ -8,7 +8,7 @@
 
           <b-nav-item-dropdown text="用户" right>
             <b-dropdown-item :to="'/login'">账户</b-dropdown-item>
-            <b-dropdown-item :to="'/home'" v-if="(typeof user.userid )  ">我的主页</b-dropdown-item>
+            <b-dropdown-item :to="'/home'" v-if="( user.userid )  ">我的主页</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">

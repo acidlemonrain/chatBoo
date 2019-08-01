@@ -6,7 +6,7 @@
       </b-tab>
       <b-tab title="我的好友">
         <b-container>
-          <div class>
+          <div>
             <div v-if="chatWith==''">
               <ul>
                 <li v-for="f in user.friend" :key="f.id">
@@ -28,7 +28,7 @@
             </div>
 
             <div v-if="chatWith!=''" style="position:relative ;width:100%">
-              <div>
+              <div style="  background-color: rgba(86, 108, 126, 0.3); padding:5px">
                 <img
                   :src="'http://106.15.183.147:8989/user/avatars/'+target.avatar"
                   width="40px"
@@ -180,10 +180,12 @@ export default {
 <style  >
 .right {
   text-align: right;
-  color: lightcoral;
+  color: black;
 }
 .msgContent {
+  padding: 1rem;
   height: 60vh;
   overflow-y: scroll;
+  background-color: rgba(86, 108, 126, 0.671);
 }
 </style>

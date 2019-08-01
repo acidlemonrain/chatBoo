@@ -7,7 +7,7 @@
           <div class="my-3">
             <b-link :to="'/userhome/'+user.userid">
               <img
-                :src="'http://localhost:8989/user/avatars/'+user.avatar"
+                :src="'http://106.15.183.147:8989/user/avatars/'+user.avatar"
                 width="40px"
                 height="40px"
                 style="object-fit: cover;"
