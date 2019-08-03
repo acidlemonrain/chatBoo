@@ -104,12 +104,18 @@ export default {
       return this.$route.params.id;
     },
     isadd() {
-      const b1 = !!this.user.friend; //要在线
-      const b2 = this.id != this.user.userid; //不是自己
-      const b3 = !this.user.friend.find(e => {
-        return e.userid == this.id;
-      }); //不在好友列表里面
-      return b1 && b2 && b3;
+      // const b1 = !!this.user.friend; //要在线
+      // const b2 = this.id != this.user.userid; //不是自己
+      // const b3 = !this.user.friend.find(e => {
+      //   return e.userid == this.id;
+      // }); //不在好友列表里面
+      return (
+        !!this.user.friend &&
+        this.id != this.user.userid &&
+        !this.user.friend.find(e => {
+          return e.userid == this.id;
+        })
+      );
     }
   },
   mounted() {

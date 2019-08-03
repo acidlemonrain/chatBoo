@@ -93,6 +93,7 @@ export default {
           let user = { ...this.user };
           user.avatar = res.data;
           this.$store.commit("auth", { ...user });
+          alert("修改成功");
         })
         .catch(function(e) {
           console.log(e);

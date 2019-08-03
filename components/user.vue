@@ -30,16 +30,23 @@
           <b-button>寻找好友</b-button>
         </b-tab>
         <b-tab title="好友邀请">
-          <b-list-group-item v-for="f in fNotify" :key="f.id">
+          <b-list-group-item
+            v-for="f in fNotify"
+            :key="f.id"
+            class="d-flex justify-content-between align-items-center"
+          >
+            {{f.content}}
+            from: {{f.active}} {{f.status==false ? '未处理' :'已同意'}}
             <div>
-              {{f.content}}
-              from: {{f.active}} {{f.status==false ? '未处理' :'已同意'}}
               <b-button
                 class="ml-auto"
                 v-if="f.status==false"
                 @click="yes(f.active,f.passive,f.id)"
               >同意</b-button>
-              <b-button @click="dismiss(f.id)">忽视</b-button>
+
+              <button type="button" class="close" aria-label="Close" @click="dismiss(f.id)">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
           </b-list-group-item>
         </b-tab>
@@ -57,6 +64,7 @@ export default {
   },
   data: () => {
     return {
+      ui: 0,
       blogs: [],
       fNotify: []
     };
@@ -81,9 +89,9 @@ export default {
       this.$http.post("friend/add", { active: a, passive: p }).then(res => {
         console.log(res.data);
         this.$store.commit("addF", res.data);
-        this.fNotify.find(x => {
-          return x.id == id;
-        }).state = true;
+        this.fNotify = this.fNotify.filter(x => {
+          return x.id !== id;
+        });
       });
     },
     dismiss(id) {
