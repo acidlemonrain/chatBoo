@@ -1,13 +1,16 @@
 <template>
   <div class="container">
-    <div v-for="user in users" :key="user.id">
-      <img
-        :src="'http://localhost:8989/user/avatars/'+user.avatar"
-        width="40px"
-        height="40px"
-        style="object-fit: cover;"
-      />
-      {{user.nickname}}
+    <div class="d-flex">
+      <div class="row">
+        <b-col sm="12" md="4">
+          <div class="card">
+            <div class="card-title">Lorem ipsum dolor sit.</div>
+            <p
+              class="card-text"
+            >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Blanditiis cumque fugiat velit repellat provident vel accusantium atque sed, repudiandae, saepe laborum corporis.</p>
+          </div>
+        </b-col>
+      </div>
     </div>
   </div>
 </template>
@@ -37,5 +40,9 @@ export default {
 <style  >
 .column {
   flex-flow: column;
+}
+.card {
+  width: 100%;
+  height: 100%;
 }
 </style>

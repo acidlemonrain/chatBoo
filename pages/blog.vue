@@ -16,7 +16,7 @@
       </b-form>
     </b-card>
 
-    <b-button @click="is=!is" v-if="!is">创建动态</b-button>
+    <b-button @click="is=!is" v-if="(!is)&&(user.userid)">创建动态</b-button>
 
     <br />
     <hr />
@@ -51,6 +51,10 @@
         </div>
       </div>
       <div class="text-right">{{ blog.gen | local}}</div>
+      <div style="cursor:pointer" @click="vote(blog.id)" class="float-right" pill>
+        <font-awesome-icon icon="thumbs-up" />
+        <b-badge variant="light">{{blog.vote}}</b-badge>
+      </div>
       <hr />
 
       <b-button block @click="blog.iscom = (!blog.iscom)" variant="outline-primary">&#8628;</b-button>
@@ -61,14 +65,11 @@
           <b-form-textarea size="sm" v-model="blog.comment"></b-form-textarea>
         </b-form-group>
 
-        <b-button @click="vote(blog.id)" class="float-right" pill>
-          点赞
-          <b-badge variant="light">{{blog.vote}}</b-badge>
-        </b-button>
         <b-button @click="comment(blog)" class="float-right mx-3" pill>评论</b-button>
       </div>
     </div>
-    <b-button @click="loadblogs" pill>加载更多</b-button>
+    <b-button @click="loadblogs" pill v-if="blogload">加载更多</b-button>
+    <b-spinner type="grow" label="Loading..." v-if="!blogload"></b-spinner>
   </b-container>
 </template>
 
@@ -76,6 +77,7 @@
 export default {
   data: () => {
     return {
+      blogload: false,
       page: 0,
       form: {},
       blogs: [],
@@ -148,25 +150,30 @@ export default {
       });
       //
 
-      this.$http.post("comment/get", commentids).then(res => {
-        //
-        const addedcomments = res.data;
+      this.$http
+        .post("comment/get", commentids)
+        .then(res => {
+          //
+          const addedcomments = res.data;
 
-        //遍历
-        addedblogs.forEach(blog => {
-          addedcomments.forEach(com => {
-            if (com.blog === blog.id) {
-              blog.comments.push(com);
-            }
-          });
-        }); //遍历结束
-        //合并blogs
-        this.blogs = [...this.blogs, ...addedblogs];
-      });
+          //遍历
+          addedblogs.forEach(blog => {
+            addedcomments.forEach(com => {
+              if (com.blog === blog.id) {
+                blog.comments.push(com);
+              }
+            });
+          }); //遍历结束
+          //合并blogs
+          this.blogs = [...this.blogs, ...addedblogs];
+          this.blogload = true;
+        })
+        .catch(e => {});
     },
 
     loadblogs() {
       //加载blog
+      this.blogload = false;
       this.$http.get("blog/" + this.page).then(res => {
         res.data.forEach(element => {
           element.tag = false;

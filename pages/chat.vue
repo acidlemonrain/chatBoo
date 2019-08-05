@@ -8,8 +8,14 @@
         <b-container>
           <div>
             <div v-if="chatWith==''">
-              <ul>
-                <li v-for="f in user.friend" :key="f.id">
+              <div v-for="f in user.friend" :key="f.id">
+                <div class="d-flex mb-3 align-items-center">
+                  <img
+                    :src="'http://106.15.183.147:8989/user/avatars/'+f.avatar"
+                    width="40px"
+                    height="40px"
+                    style="object-fit:cover"
+                  />
                   <div
                     class
                     v-if="online.includes(f.userid)"
@@ -23,47 +29,34 @@
                     {{f.nickname}}
                     <b-badge variant="red">{{f.unread}}</b-badge>
                   </div>
-                </li>
-              </ul>
+                </div>
+              </div>
             </div>
 
             <div v-if="chatWith!=''" style="position:relative ;width:100%">
               <div style="  background-color: rgba(86, 108, 126, 0.3); padding:5px">
-                <img
-                  :src="'http://106.15.183.147:8989/user/avatars/'+target.avatar"
-                  width="40px"
-                  height="40px"
-                  style="object-fit: cover;border-radius:50%"
-                />
-                {{target.nickname}}
-                <button
-                  type="button"
-                  class="close"
-                  aria-label="Close"
-                  @click="chatWith=''"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <div class="d-flex justify-content-between">
+                  <user :user="target"></user>
+                  <button type="button" class="close" aria-label="Close" @click="chatWith=''">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
               </div>
               <div class="msgContent" id="msg">
                 <div v-for="(i,inx) in target.msgs" :key="inx">
-                  <div v-bind:class="{ right: user.userid != i.chatWith  }" class="my-3">
+                  <div v-bind:class="{ 'right': user.userid != i.chatWith  }" class="my-3">
                     <div>
-                      <img
-                        :src="'http://106.15.183.147:8989/user/avatars/'+i.avatar"
-                        width="40px"
-                        height="40px"
-                        style="object-fit: cover;border-radius:50%"
-                      />
-                      <span v-bind:class="{ right: user.userid == i.chatWith  }">{{i.author}}:</span>
+                      <user :user="i"></user>
                     </div>
-                    <div class="ml-4 d-inline-block px-3 mt-2">{{ i.content}}</div>
+                    <div class="ml-4 d-inline-block px-3 mt-2 badge">{{ i.content}}</div>
                   </div>
                 </div>
               </div>
               <b-form-group>
-                <b-input v-model="msg"></b-input>
-                <b-button @click="send" class="float-right">send</b-button>
+                <div class="d-flex">
+                  <b-input v-model="msg"></b-input>
+                  <b-button @click="send" class="float-right">send</b-button>
+                </div>
               </b-form-group>
             </div>
           </div>
@@ -77,10 +70,12 @@
 
 <script>
 import io from "socket.io-client";
+import user from "~/components/userlist.vue";
 import plaza from "~/components/plaza.vue";
 export default {
   components: {
-    plaza
+    plaza,
+    user
   },
   data: () => {
     return {

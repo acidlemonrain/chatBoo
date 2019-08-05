@@ -1,9 +1,8 @@
 <template>
   <b-container>
-    <h5>好友广场</h5>
     <div>
       <b-row class="wrap">
-        <b-col v-for="user in users" :key="user.id" md="4" sm="6">
+        <b-col v-for="user in freshmen" :key="user.id" md="4" sm="6">
           <div class="my-3">
             <b-link :to="'/userhome/'+user.userid">
               <img
@@ -12,7 +11,7 @@
                 height="40px"
                 style="object-fit: cover;"
                 v-b-tooltip.hover
-                :title="user.des"
+                :title="user.des "
               />
             </b-link>
             {{user.nickname}}
@@ -29,6 +28,13 @@ export default {
     return {
       users: []
     };
+  },
+  computed: {
+    freshmen() {
+      return this.users.sort((a, b) => {
+        return a.gen < b.gen;
+      });
+    }
   },
   created() {
     this.$http

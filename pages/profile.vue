@@ -1,5 +1,6 @@
 <template>
   <b-container>
+    <b-modal ref="my-modal" ok-only>修改成功</b-modal>
     <b-row class="center">
       <b-col sm="12" md="6">
         <b-card>
@@ -60,9 +61,7 @@ export default {
       this.$http
         .post("user/prof", { ...{ userid: this.user.userid }, ...this.form })
         .then(res => {
-          this.$bvToast.toast(`修改成功`, {
-            solid: true
-          });
+          this.$refs["my-modal"].show();
           let user = { ...this.user };
           user.nickname = form.nickname;
           user.sex = this.form.sex;
