@@ -7,6 +7,7 @@
             <img
               :src="'http://106.15.183.147:8989/user/avatars/'+info.avatar"
               width="80%"
+              height="200px"
               style="object-fit: cover;"
             />
           </figure>
